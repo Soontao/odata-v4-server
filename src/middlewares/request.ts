@@ -54,7 +54,15 @@ export function withODataRequestHandler(server: typeof ODataServer) {
       });
 
       processor.on('data', (chunk, encoding, done) => {
-        if (!hasError) { res.write(chunk, encoding, done); }
+        if (!hasError) {
+          if (!res.write(chunk, encoding, done)) {
+            processor.pause();
+          }
+        }
+      });
+
+      res.on("drain", function () {
+        processor.resume();
       });
 
       let body = req.body;
