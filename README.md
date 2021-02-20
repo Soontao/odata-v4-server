@@ -17,7 +17,7 @@
 
 NodeJS OData(V4) Server Implementation.
 
-**This project is under heavy development.**
+**This project is under heavy development, if you are looking forward an OData Framework for production usage, please try the [SAP CAP Framework](https://cap.cloud.sap/docs/get-started/)**
 
 **Just check the [demo project](https://github.com/Soontao/odata-v4-server-demo) for features preview.**
 
