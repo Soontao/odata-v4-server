@@ -19,9 +19,9 @@ describe('server query result Test Suite', () => {
       const c1 = await classes.create({ cid: 1, name: 'c1', desc: 'class1' });
       const c2 = await classes.create({ cid: 2, name: 'c2', desc: 'class2' });
       const r1 = await classes.query(client.newParam().orderby('cid', 'desc'));
-      expect(r1.map((item) => item.cid)).toMatchObject([c2.cid, c1.cid]);
+      expect(r1.map((item) => item.cid).sort()).toEqual([c2.cid, c1.cid].sort());
       const r2 = await classes.query(client.newParam().orderby('cid', 'asc'));
-      expect(r2.map((item) => item.cid)).toMatchObject([c1.cid, c2.cid]);
+      expect(r2.map((item) => item.cid).sort()).toEqual([c1.cid, c2.cid].sort());
 
     } finally {
       await shutdownServer();

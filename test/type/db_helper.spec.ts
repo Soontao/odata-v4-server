@@ -1,6 +1,7 @@
 import identity from '@newdash/newdash/.internal/identity';
 import { defaultParser } from '@odata/parser';
 import { FieldNameMapper, transformFilterAst, transformQueryAst } from '../../src';
+import { DEFAULT_TOP_VALUE } from '../../src/constants';
 import { createDBHelper } from '../../src/type/db_helper';
 
 
@@ -23,7 +24,7 @@ describe('DB Helper Test Suite', () => {
     const ast = defaultParser.query('$format=json&$select=A,B,C&$top=10&$skip=30&$filter=A eq 1&$orderby=A desc,V asc');
     const { selectedFields, sqlQuery } = transformQueryAst(ast, undefined, helper.mapQueryValue);
 
-    expect(sqlQuery.trim()).toEqual('WHERE A = 1 LIMIT 10 OFFSET 30 ORDER BY A DESC, V ASC');
+    expect(sqlQuery.trim()).toEqual('WHERE A = 1 ORDER BY A DESC, V ASC LIMIT 10 OFFSET 30');
     expect(selectedFields).toEqual(['A', 'B', 'C']);
 
   });
@@ -43,8 +44,32 @@ describe('DB Helper Test Suite', () => {
     const nameMapper: FieldNameMapper = (fieldName) => `table.${fieldName}`;
     const { selectedFields, sqlQuery } = transformQueryAst(ast, nameMapper, helper.mapQueryValue);
 
-    expect(sqlQuery.trim()).toEqual('WHERE table.A = 1 LIMIT 10 OFFSET 30 ORDER BY table.A DESC, table.V ASC');
+    expect(sqlQuery.trim()).toEqual('WHERE table.A = 1 ORDER BY table.A DESC, table.V ASC LIMIT 10 OFFSET 30');
     expect(selectedFields).toEqual(['table.A', 'table.B', 'table.C']);
+
+  });
+
+
+  it('should support default top value', () => {
+    const helper = createDBHelper({ type: 'sqljs' });
+
+    const ast = defaultParser.query('$skip=10');
+    const nameMapper: FieldNameMapper = (fieldName) => `table.${fieldName}`;
+    const { sqlQuery } = transformQueryAst(ast, nameMapper, helper.mapQueryValue);
+
+    expect(sqlQuery.trim()).toEqual(`LIMIT ${DEFAULT_TOP_VALUE} OFFSET 10`);
+
+  });
+
+
+  it('should support default offset value', () => {
+    const helper = createDBHelper({ type: 'sqljs' });
+
+    const ast = defaultParser.query('$select=a');
+    const nameMapper: FieldNameMapper = (fieldName) => `table.${fieldName}`;
+    const { sqlQuery } = transformQueryAst(ast, nameMapper, helper.mapQueryValue);
+
+    expect(sqlQuery.trim()).toEqual(`LIMIT ${DEFAULT_TOP_VALUE} OFFSET 0`);
 
   });
 

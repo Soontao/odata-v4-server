@@ -77,3 +77,7 @@ export enum ServerType {
 }
 
 
+/**
+ * default top/limit value
+ */
+export const DEFAULT_TOP_VALUE = 1000 * 1000;

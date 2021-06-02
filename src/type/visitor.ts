@@ -1,5 +1,6 @@
 import { identity } from '@newdash/newdash/.internal/identity';
 import { QueryOptionsNode as ODataQuery, Token, TokenType, traverseAst, traverseAstDeepFirst, Traverser } from '@odata/parser';
+import { DEFAULT_TOP_VALUE } from '../constants';
 import { getKeyProperties } from '../edm';
 import { NotImplementedError } from '../error';
 import { EdmType } from '../literal';
@@ -71,8 +72,8 @@ export interface FieldNameMapper {
 
 export const transformQueryAst = (node: ODataQuery, nameMapper: FieldNameMapper = identity, valueMapper: ValueMapper) => {
 
-  let offset = 0;
-  let limit = 0;
+  let offset = null;
+  let limit = null;
   let where = '';
   let inlineCount = false;
 
@@ -160,11 +161,21 @@ export const transformQueryAst = (node: ODataQuery, nameMapper: FieldNameMapper 
   if (where && where.trim().length > 0) {
     parts.push(`WHERE ${where}`);
   }
-  if (offset || limit) {
-    parts.push(`LIMIT ${limit} OFFSET ${offset}`);
-  }
+
   if (orderBy.length > 0) {
     parts.push(`ORDER BY ${orderBy.join(', ')}`);
+  }
+
+  if (limit !== null) {
+    parts.push(`LIMIT ${limit}`);
+  } else {
+    parts.push(`LIMIT ${DEFAULT_TOP_VALUE}`);
+  }
+
+  if (offset != null) {
+    parts.push(`OFFSET ${offset}`);
+  } else {
+    parts.push(`OFFSET 0`);
   }
 
   const sqlQuery = parts.length > 0 ? parts.join(' ') : '';
