@@ -83,7 +83,7 @@
     "eslint": "^7.29.0",
     "eslint-plugin-es-beautifier": "^1.0.1",
     "event-stream": "^4.0.1",
-    "jest": "^26.6.3",
+    "jest": "^27.0.6",
     "mongodb": "^3.6.9",
     "mysql": "^2.18.1",
     "pg": "^8.6.0",
