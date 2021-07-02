@@ -42,7 +42,7 @@
     "@newdash/inject": "^0.2.29",
     "@newdash/newdash": "^5.19.0",
     "@odata/metadata": "^0.2.5",
-    "@odata/parser": "^0.2.7",
+    "@odata/parser": "^0.2.8",
     "bignumber.js": "^9.0.1",
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
@@ -62,7 +62,7 @@
     "validate.js": "^0.13.1"
   },
   "devDependencies": {
-    "@odata/client": "^2.15.2",
+    "@odata/client": "^2.16.1",
     "@types/body-parser": "1.19.0",
     "@types/cors": "^2.8.10",
     "@types/debug": "^4.1.6",
